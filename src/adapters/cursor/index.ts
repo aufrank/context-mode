@@ -360,9 +360,23 @@ export class CursorAdapter implements HookAdapter {
     } catch {
       return "not installed";
     }
-  }
+    }
 
-  configureAllHooks(_pluginRoot: string): string[] {
+    getHookPaths(pluginRoot: string): string[] {
+    return Object.values(CURSOR_HOOK_SCRIPTS).map((script) => {
+      // Cursor hooks can be in root hooks/ or platform-specific hooks/cursor/
+      const standardPath = resolve(pluginRoot, "hooks", script);
+      const subfolderPath = resolve(pluginRoot, "hooks", "cursor", script);
+      try {
+        accessSync(standardPath, constants.F_OK);
+        return standardPath;
+      } catch {
+        return subfolderPath;
+      }
+    });
+    }
+
+    configureAllHooks(pluginRoot: string): string[] {
     const settings = (this.readSettings() as CursorHooksFile | null) ?? { version: 1, hooks: {} };
     const hooks = (settings.hooks ?? {}) as Record<string, CursorHookCommandEntry[] | unknown>;
     const changes: string[] = [];

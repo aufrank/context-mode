@@ -1632,7 +1632,14 @@ server.registerTool(
     inputSchema: z.object({}),
   },
   async () => {
-    const pluginRoot = dirname(dirname(fileURLToPath(import.meta.url)));
+    const __filename = fileURLToPath(import.meta.url);
+    const __dirname = dirname(__filename);
+    const pluginRoot =
+      __dirname.endsWith("src") ||
+      __dirname.endsWith("/src") ||
+      __dirname.endsWith("\\src")
+        ? dirname(__dirname)
+        : __dirname;
     const cmd = `node "${pluginRoot}/build/cli.js" doctor`;
 
     const text = [
@@ -1677,7 +1684,14 @@ server.registerTool(
     inputSchema: z.object({}),
   },
   async () => {
-    const pluginRoot = dirname(dirname(fileURLToPath(import.meta.url)));
+    const __filename = fileURLToPath(import.meta.url);
+    const __dirname = dirname(__filename);
+    const pluginRoot =
+      __dirname.endsWith("src") ||
+      __dirname.endsWith("/src") ||
+      __dirname.endsWith("\\src")
+        ? dirname(__dirname)
+        : __dirname;
     const cmd = `node "${pluginRoot}/build/cli.js" upgrade`;
 
     const text = [

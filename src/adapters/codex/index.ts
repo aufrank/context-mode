@@ -211,6 +211,10 @@ export class CodexAdapter implements HookAdapter {
     return "not installed";
   }
 
+  getHookPaths(_pluginRoot: string): string[] {
+    return [];
+  }
+
   // ── Upgrade ────────────────────────────────────────────
 
   configureAllHooks(_pluginRoot: string): string[] {

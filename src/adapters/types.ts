@@ -238,6 +238,9 @@ export interface HookAdapter {
   /** Get the installed version from this platform's registry/marketplace. */
   getInstalledVersion(): string;
 
+  /** Get the physical paths to the required hook scripts. Used by doctor. */
+  getHookPaths(pluginRoot: string): string[];
+
   // ── Upgrade ────────────────────────────────────────────
 
   /** Configure all hooks for this platform. Returns change descriptions. */

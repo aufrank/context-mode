@@ -490,6 +490,12 @@ export class ClaudeCodeAdapter implements HookAdapter {
     return "not installed";
   }
 
+  getHookPaths(pluginRoot: string): string[] {
+    return Object.values(HOOK_SCRIPTS).map((script) =>
+      resolve(pluginRoot, "hooks", script),
+    );
+  }
+
   // ── Upgrade ────────────────────────────────────────────
 
   configureAllHooks(pluginRoot: string): string[] {

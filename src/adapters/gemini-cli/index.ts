@@ -440,6 +440,20 @@ export class GeminiCLIAdapter implements HookAdapter {
     return "not installed";
   }
 
+  getHookPaths(pluginRoot: string): string[] {
+    const scripts = Object.values(GEMINI_HOOK_SCRIPTS);
+    return scripts.map((script) => {
+      const standardPath = resolve(pluginRoot, "hooks", script);
+      const subfolderPath = resolve(pluginRoot, "hooks", "gemini-cli", script);
+      try {
+        accessSync(standardPath, constants.F_OK);
+        return standardPath;
+      } catch {
+        return subfolderPath;
+      }
+    });
+  }
+
   // ── Upgrade ────────────────────────────────────────────
 
   configureAllHooks(pluginRoot: string): string[] {
@@ -502,15 +516,20 @@ export class GeminiCLIAdapter implements HookAdapter {
 
   setHookPermissions(pluginRoot: string): string[] {
     const set: string[] = [];
-    const hooksDir = join(pluginRoot, "hooks", "gemini-cli");
     for (const scriptName of Object.values(GEMINI_HOOK_SCRIPTS)) {
-      const scriptPath = resolve(hooksDir, scriptName);
-      try {
-        accessSync(scriptPath, constants.R_OK);
-        chmodSync(scriptPath, 0o755);
-        set.push(scriptPath);
-      } catch {
-        /* skip missing scripts */
+      const standardPath = resolve(pluginRoot, "hooks", scriptName);
+      const subfolderPath = resolve(pluginRoot, "hooks", "gemini-cli", scriptName);
+      
+      const scriptPaths = [standardPath, subfolderPath];
+      for (const scriptPath of scriptPaths) {
+        try {
+          accessSync(scriptPath, constants.R_OK);
+          chmodSync(scriptPath, 0o755);
+          set.push(scriptPath);
+          break; // Found and set one, move to next script
+        } catch {
+          /* skip if not found */
+        }
       }
     }
     return set;

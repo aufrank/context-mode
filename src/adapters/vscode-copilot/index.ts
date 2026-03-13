@@ -498,6 +498,20 @@ export class VSCodeCopilotAdapter implements HookAdapter {
     return "not installed";
   }
 
+  getHookPaths(pluginRoot: string): string[] {
+    return Object.values(VSCODE_HOOK_SCRIPTS).map((script) => {
+      // VSCode hooks can be in root hooks/ or platform-specific hooks/vscode-copilot/
+      const standardPath = resolve(pluginRoot, "hooks", script);
+      const subfolderPath = resolve(pluginRoot, "hooks", "vscode-copilot", script);
+      try {
+        accessSync(standardPath, constants.F_OK);
+        return standardPath;
+      } catch {
+        return subfolderPath;
+      }
+    });
+  }
+
   // ── Upgrade ────────────────────────────────────────────
 
   configureAllHooks(pluginRoot: string): string[] {

@@ -42,7 +42,8 @@ tasks:
   section:
     desc: Print a colorful section header
     cmds:
-      - node -e "const t=process.env.TITLE||''; console.log('\n\x1b[1;36m========================================\x1b[0m'); console.log('\x1b[1;33m'+t+'\x1b[0m'); console.log('\x1b[1;36m========================================\x1b[0m\n');"
+      - |
+        node -e "const t=process.env.TITLE||''; console.log('\n\x1b[1;36m========================================\x1b[0m'); console.log('\x1b[1;33m'+t+'\x1b[0m'); console.log('\x1b[1;36m========================================\x1b[0m\n');"
 
   install:vscode:
     desc: Package and install the VS Code extension (.vsix) into the local VS Code
@@ -68,12 +69,12 @@ tasks:
   install:gemini:
     desc: Install the repo as a Gemini CLI extension (alias to install-extension)
     cmds:
-      - "task: install-extension"
+      - task: install-extension
 
   uninstall:gemini:
     desc: Uninstall the Gemini CLI extension (alias to uninstall-extension)
     cmds:
-      - "task: uninstall-extension"
+      - task: uninstall-extension
 
   help: 
     desc: Show available namespaced tasks

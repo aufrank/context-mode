@@ -49,9 +49,9 @@
     "LICENSE"
   ],
   "scripts": {
-    "build": "tsc && chmod +x build/cli.js",
+    "build": "tsc && (chmod +x build/cli.js || echo 'chmod not supported')",
     "bundle": "esbuild src/server.ts --bundle --platform=node --target=node18 --format=esm --outfile=server.bundle.mjs --external:better-sqlite3 --external:turndown --external:turndown-plugin-gfm --external:@mixmark-io/domino --minify && esbuild src/cli.ts --bundle --platform=node --target=node18 --format=esm --outfile=cli.bundle.mjs --external:better-sqlite3 --minify",
-    "bundle:gemini": "esbuild src/server.ts --bundle --platform=node --target=node18 --format=esm --outfile=extensions/gemini-context-hub/server.bundle.mjs --external:better-sqlite3 --external:turndown --external:turndown-plugin-gfm --external:@mixmark-io/domino --minify && esbuild src/cli.ts --bundle --platform=node --target=node18 --format=esm --outfile=extensions/gemini-context-hub/cli.bundle.mjs --external:better-sqlite3 --minify && cp -r build extensions/gemini-context-hub/build",
+    "bundle:gemini": "esbuild src/server.ts --bundle --platform=node --target=node18 --format=esm --outfile=extensions/gemini-context-hub/server.bundle.mjs --external:better-sqlite3 --external:turndown --external:turndown-plugin-gfm --external:@mixmark-io/domino --minify && esbuild src/cli.ts --bundle --platform=node --target=node18 --format=esm --outfile=extensions/gemini-context-hub/cli.bundle.mjs --external:better-sqlite3 --minify && node -e \"const fs=require('fs'); fs.cpSync('build', 'extensions/gemini-context-hub/build', {recursive: true, force: true}); fs.cpSync('configs', 'extensions/gemini-context-hub/configs', {recursive: true, force: true})\"",
     "prepublishOnly": "npm run build",
     "dev": "npx tsx src/server.ts",
     "setup": "npx tsx src/cli.ts setup",

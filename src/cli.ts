@@ -270,15 +270,21 @@ async function doctor(): Promise<number> {
 
   // Hook script exists
   p.log.step("Checking hook script...");
-  const hookScriptPath = resolve(pluginRoot, "hooks", "pretooluse.mjs");
-  try {
-    accessSync(hookScriptPath, constants.R_OK);
-    p.log.success(color.green("Hook script exists: PASS") + color.dim(` — ${hookScriptPath}`));
-  } catch {
-    p.log.error(
-      color.red("Hook script exists: FAIL") +
-        color.dim(` — not found at ${hookScriptPath}`),
-    );
+  const hookPaths = adapter.getHookPaths(pluginRoot);
+  if (hookPaths.length > 0) {
+    for (const hookPath of hookPaths) {
+      try {
+        accessSync(hookPath, constants.R_OK);
+        p.log.success(color.green("Hook script exists: PASS") + color.dim(` — ${hookPath}`));
+      } catch {
+        p.log.error(
+          color.red("Hook script exists: FAIL") +
+            color.dim(` — not found at ${hookPath}`),
+        );
+      }
+    }
+  } else {
+    p.log.warn(color.yellow("Hook script: WARN") + color.dim(" — no required hook scripts identified by adapter"));
   }
 
   // Plugin registration — adapter-aware
