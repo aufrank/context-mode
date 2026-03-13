@@ -5,16 +5,22 @@
  * JSON stdin (the same JSON that Claude Code sends) and asserts correct output.
  */
 
-import { describe, test, beforeAll, afterAll } from "vitest";
+import { describe, test, beforeAll, afterAll, beforeEach } from "vitest";
 import { strict as assert } from "node:assert";
 import { spawnSync } from "node:child_process";
-import { join, dirname } from "node:path";
+import { join, dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { mkdirSync, writeFileSync, rmSync, existsSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const HOOK_PATH = join(__dirname, "..", "hooks", "pretooluse.mjs");
+
+// Clean guidance throttle markers before each test so guidance fires fresh
+const _guidanceDir = resolve(tmpdir(), `context-mode-guidance-${process.pid}`);
+beforeEach(() => {
+  try { rmSync(_guidanceDir, { recursive: true, force: true }); } catch {}
+});
 
 interface HookResult {
   exitCode: number;
