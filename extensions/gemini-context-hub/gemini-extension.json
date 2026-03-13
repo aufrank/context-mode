@@ -1,0 +1,22 @@
+{
+  "name": "context-hub",
+  "version": "1.0.20",
+  "description": "MCP extension that saves 98% of your context window with sandboxed execution and FTS5 search.",
+  "author": "Mert Koseoğlu",
+  "license": "Elastic-2.0",
+  "mcpServers": {
+    "context-mode": {
+      "command": "node",
+      "args": ["${extensionPath}/server.bundle.mjs"],
+      "env": {
+        "NODE_ENV": "production"
+      }
+    }
+  },
+  "contextFileName": "GEMINI.md",
+  "commandsDir": "commands",
+  "skillsDir": "skills",
+  "hooksDir": "hooks",
+  "agentsDir": "agents",
+  "policiesDir": "policies"
+}

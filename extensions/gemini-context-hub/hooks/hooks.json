@@ -1,0 +1,48 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ${extensionPath}/hooks/sessionstart.mjs"
+          }
+        ]
+      }
+    ],
+    "BeforeTool": [
+      {
+        "matcher": "run_shell_command|read_file|read_many_files|grep_search|search_file_content|web_fetch|activate_skill|mcp_context-mode",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ${extensionPath}/hooks/beforetool.mjs"
+          }
+        ]
+      }
+    ],
+    "AfterTool": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ${extensionPath}/hooks/aftertool.mjs"
+          }
+        ]
+      }
+    ],
+    "PreCompress": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ${extensionPath}/hooks/precompress.mjs"
+          }
+        ]
+      }
+    ]
+  }
+}

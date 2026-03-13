@@ -1,0 +1,4 @@
+description = "Get session statistics for context-mode"
+prompt = """
+Call the `mcp_context-mode_ctx_stats` tool and display the full output verbatim.
+"""
