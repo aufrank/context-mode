@@ -11,6 +11,41 @@
  */
 
 import { ROUTING_BLOCK, READ_GUIDANCE, GREP_GUIDANCE, BASH_GUIDANCE } from "../routing-block.mjs";
+import { existsSync, writeFileSync, mkdirSync, rmSync, readdirSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { resolve } from "node:path";
+
+// Guidance throttle: show each advisory type at most once per session.
+// Hybrid approach:
+//   - In-memory Set for same-process (OpenCode ts-plugin, vitest)
+//   - File-based markers for separate-process hooks (Claude Code, Gemini, Cursor, VS Code Copilot)
+// Session scoped via process.ppid (= host PID, constant for session lifetime).
+const _guidanceShown = new Set();
+const _guidanceDir = resolve(tmpdir(), `context-mode-guidance-${process.ppid}`);
+
+function guidanceOnce(type, content) {
+  // Fast path: in-memory (same process)
+  if (_guidanceShown.has(type)) return null;
+
+  // Slow path: file marker (cross-process)
+  const marker = resolve(_guidanceDir, type);
+  if (existsSync(marker)) {
+    _guidanceShown.add(type); // cache for future in-process calls
+    return null;
+  }
+
+  // First time: mark as shown
+  _guidanceShown.add(type);
+  try { mkdirSync(_guidanceDir, { recursive: true }); } catch {}
+  try { writeFileSync(marker, "", "utf-8"); } catch {}
+
+  return { action: "context", additionalContext: content };
+}
+
+export function resetGuidanceThrottle() {
+  _guidanceShown.clear();
+  try { rmSync(_guidanceDir, { recursive: true, force: true }); } catch {}
+}
 
 /**
  * Strip heredoc content from a shell command.
@@ -157,18 +192,18 @@ export function routePreToolUse(toolName, toolInput, projectDir) {
       };
     }
 
-    // allow all other Bash commands, but inject routing nudge
-    return { action: "context", additionalContext: BASH_GUIDANCE };
+    // allow all other Bash commands, but inject routing nudge (once per session)
+    return guidanceOnce("bash", BASH_GUIDANCE);
   }
 
-  // ─── Read: nudge toward execute_file ───
+  // ─── Read: nudge toward execute_file (once per session) ───
   if (canonical === "Read") {
-    return { action: "context", additionalContext: READ_GUIDANCE };
+    return guidanceOnce("read", READ_GUIDANCE);
   }
 
-  // ─── Grep: nudge toward execute ───
+  // ─── Grep: nudge toward execute (once per session) ───
   if (canonical === "Grep") {
-    return { action: "context", additionalContext: GREP_GUIDANCE };
+    return guidanceOnce("grep", GREP_GUIDANCE);
   }
 
   // ─── WebFetch: deny + redirect to sandbox ───
