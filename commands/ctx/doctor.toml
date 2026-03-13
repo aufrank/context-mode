@@ -1,0 +1,4 @@
+description = "Run context-mode diagnostics"
+prompt = """
+Call the `mcp_context-mode_ctx_doctor` tool and follow its instructions to run the diagnostic command and display the results as a checklist.
+"""

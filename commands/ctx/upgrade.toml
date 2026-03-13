@@ -1,0 +1,4 @@
+description = "Upgrade context-mode extension"
+prompt = """
+Call the `mcp_context-mode_ctx_upgrade` tool and follow its instructions to perform the upgrade.
+"""

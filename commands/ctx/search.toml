@@ -1,0 +1,5 @@
+description = "Search indexed context-mode content"
+prompt = """
+Call `mcp_context-mode_ctx_search` with the following queries: [{{args}}].
+If no args provided, list available sources.
+"""

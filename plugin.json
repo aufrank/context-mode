@@ -1,0 +1,19 @@
+{
+  "name": "context-mode",
+  "version": "1.0.20",
+  "description": "MCP server that saves most of your context window and provides hooks for Copilot/VSCode.",
+  "author": { "name": "Mert Koseoğlu", "url": "https://github.com/mksglu" },
+  "repository": "https://github.com/mksglu/context-mode",
+  "license": "Elastic-2.0",
+  "keywords": ["mcp", "context-window", "sandbox", "copilot", "vscode"],
+  "agents": "agents/",
+  "skills": "skills/",
+  "hooks": "hooks/hooks.json",
+  "mcpServers": {
+    "context-mode": {
+      "command": "node",
+      "args": ["${PLUGIN_ROOT}/start.mjs"]
+    }
+  },
+  "strict": false
+}

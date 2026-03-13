@@ -1,0 +1,15 @@
+# context-mode security policy
+
+[[rules]]
+name = "Redirect curl/wget to context-mode"
+description = "Do not allow direct curl or wget in shell. Redirect to ctx_fetch_and_index or sandboxed execute."
+matcher = { tool = "run_shell_command", command = ".*(curl|wget).*" }
+action = "deny"
+message = "Direct HTTP calls via shell are blocked. Use mcp__context-mode__ctx_fetch_and_index or run within mcp__context-mode__ctx_execute(language: 'javascript')."
+
+[[rules]]
+name = "Redirect large output commands"
+description = "Warn when commands that usually produce large output are run directly in shell."
+matcher = { tool = "run_shell_command", command = ".*(grep|find|git log|git diff|npm test|pytest|docker logs).*" }
+action = "ask_user"
+message = "This command may produce large output that floods your context. Consider using mcp__context-mode__ctx_batch_execute instead. Continue anyway?"

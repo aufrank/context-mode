@@ -1,0 +1,30 @@
+{
+  "name": "context-mode-vscode-copilot",
+  "displayName": "Context Mode — Copilot Agent Plugin",
+  "publisher": "context-mode",
+  "version": "0.0.0",
+  "engines": {
+    "vscode": "^1.110.0"
+  },
+  "activationEvents": [
+    "onCommand:context-mode.installCopilotHooks",
+    "onCommand:context-mode.uninstallCopilotHooks"
+  ],
+  "main": "./extension.js",
+  "repository": {
+    "type": "git",
+    "url": "REPLACE_WITH_REPOSITORY_URL"
+  },
+  "contributes": {
+    "commands": [
+      {
+        "command": "context-mode.installCopilotHooks",
+        "title": "Context Mode: Install Copilot Hooks"
+      },
+      {
+        "command": "context-mode.uninstallCopilotHooks",
+        "title": "Context Mode: Uninstall Copilot Hooks"
+      }
+    ]
+  }
+}
